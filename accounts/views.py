@@ -1,12 +1,20 @@
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, TemplateView
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import login, authenticate,logout, get_user_model
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.contrib import messages
+from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, UserUpdateForm
 
+
+
 User = get_user_model()
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Has cerrado sesión exitosamente.')
+    return redirect('accounts:login')
 
 class OnlyYouMixin(UserPassesTestMixin):
     def test_func(self):
@@ -65,7 +73,7 @@ class UserUpdate(LoginRequiredMixin, OnlyYouMixin, UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, "Información actualizada exitosamente.")
-        return reverse('user_detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse('accounts:user_detail', kwargs={'pk': self.kwargs['pk']})
 
     def form_invalid(self, form):
         messages.error(self.request, "Por favor corrija los errores en el formulario.")
@@ -74,7 +82,7 @@ class UserUpdate(LoginRequiredMixin, OnlyYouMixin, UpdateView):
 class UserDelete(LoginRequiredMixin, OnlyYouMixin, DeleteView):
     model = User
     template_name = 'accounts/user_delete.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('accounts:login')
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Cuenta eliminada exitosamente.")
@@ -96,4 +104,5 @@ class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
     template_name = 'accounts/user_detail.html'
 
     def get_success_url(self):
-        return reverse('user_detail', kwargs={'pk': self.request.user.pk})
+        return reverse('accounts:user_detail', kwargs={'pk': self.request.user.pk})
+    

@@ -15,8 +15,8 @@
           <li><a href="{% url 'accounts:user_detail' user.pk %}">Información del miembro</a></li>
           <li><a href="{% url 'accounts:logout' %}">Cerrar sesión</a></li>
         {% else %}
-          <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
-          <li><a href="{% url 'signup' %}">Registro de membresía</a></li>
+          <li><a href="{% url 'accounts:login' %}">Iniciar sesión</a></li>
+          <li><a href="{% url 'accounts:signup' %}">Registro de membresía</a></li>
         {% endif %}
       </ul>
     </nav>

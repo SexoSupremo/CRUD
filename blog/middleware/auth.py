@@ -9,6 +9,7 @@ class AuthMiddleware(MiddlewareMixin):
         self.PUBLIC_PATHS = [
             reverse('accounts:login'),
             reverse('accounts:signup'),
+            reverse('accounts:logout'),
             '/static/',
             '/media/',
             '/favicon.ico',

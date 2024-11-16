@@ -1,29 +1,283 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1>Página de registro de membresía</h1>
-<form method="post">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="id_username">Nombre de usuario</label>
-    {{ form.username }}
-  </div>
-  <div class="form-group">
-    <label for="id_email">Dirección de correo electrónico</label>
-    {{ form.email }}
-  </div>
-  <div class="form-group">
-    <label for="id_age">Edad</label>
-    {{ form.age }}
-  </div>
-  <div class="form-group">
-    <label for="id_password1">Contraseña</label>
-    {{ form.password1 }}
-  </div>
-  <div class="form-group">
-    <label for="id_password2">Confirmar contraseña</label>
-    {{ form.password2 }}
-  </div>
-  <input type="submit" value="Registro">
-</form>
+<div class="signup-container">
+    <h1>Registro de Membresía</h1>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" id="signupForm">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_username">Nombre de usuario:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="error-message">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_email">Dirección de correo electrónico:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="error-message">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_age">Edad:</label>
+            {{ form.age }}
+            {% if form.age.errors %}
+                <div class="error-message">{{ form.age.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password1">Contraseña:</label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="error-message">{{ form.password1.errors }}</div>
+            {% endif %}
+            <div class="password-requirements">
+                <h3>Requisitos de la contraseña:</h3>
+                <ul>
+                    <li id="length-check">
+                        <span class="check-icon">✓</span>
+                        Su contraseña debe contener al menos 8 caracteres
+                    </li>
+                    <li id="personal-info-check">
+                        <span class="check-icon">✓</span>
+                        Su contraseña no puede asemejarse tanto a su otra información personal
+                    </li>
+                    <li id="common-check">
+                        <span class="check-icon">✓</span>
+                        Su contraseña no puede ser una clave utilizada comúnmente
+                    </li>
+                    <li id="numeric-check">
+                        <span class="check-icon">✓</span>
+                        Su contraseña no puede ser completamente numérica
+                    </li>
+                    <li id="complexity-check">
+                        <span class="check-icon">✓</span>
+                        Use una combinación de letras (mayúsculas y minúsculas), números y símbolos
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirmar contraseña:</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="error-message">{{ form.password2.errors }}</div>
+            {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="submit-button">Registrarse</button>
+    </form>
+</div>
+
+<style>
+    .signup-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .password-requirements {
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        border: 1px solid #e9ecef;
+    }
+
+    .password-requirements h3 {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 10px;
+    }
+
+    .password-requirements ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+    }
+
+    .password-requirements li {
+        font-size: 0.85em;
+        color: #6c757d;
+        margin-bottom: 5px;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .check-icon {
+        position: absolute;
+        left: 0;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+    }
+
+    .requirement-met {
+        color: #198754;
+    }
+
+    .requirement-met .check-icon {
+        opacity: 1;
+        color: #198754;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.85em;
+        margin-top: 5px;
+    }
+
+    .error-message ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .submit-button {
+        background-color: #0d6efd;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .submit-button:hover {
+        background-color: #0b5ed7;
+    }
+
+    .messages {
+        margin-bottom: 20px;
+    }
+
+    .message {
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const password1Input = document.querySelector('#id_password1');
+    const password2Input = document.querySelector('#id_password2');
+    const usernameInput = document.querySelector('#id_username');
+    const emailInput = document.querySelector('#id_email');
+
+    const lengthCheck = document.querySelector('#length-check');
+    const personalInfoCheck = document.querySelector('#personal-info-check');
+    const commonCheck = document.querySelector('#common-check');
+    const numericCheck = document.querySelector('#numeric-check');
+    const complexityCheck = document.querySelector('#complexity-check');
+
+    function validatePassword() {
+        const password = password1Input.value;
+        const username = usernameInput.value;
+        const email = emailInput.value;
+
+        // Validar longitud mínima
+        if (password.length >= 8) {
+            lengthCheck.classList.add('requirement-met');
+        } else {
+            lengthCheck.classList.remove('requirement-met');
+        }
+
+        // Validar que no sea similar a la información personal
+        const personalInfo = [username, email].filter(Boolean);
+        const hasSimilarInfo = personalInfo.some(info => 
+            password.toLowerCase().includes(info.toLowerCase())
+        );
+        if (!hasSimilarInfo) {
+            personalInfoCheck.classList.add('requirement-met');
+        } else {
+            personalInfoCheck.classList.remove('requirement-met');
+        }
+
+        // Validar que no sea completamente numérica
+        if (!/^\d+$/.test(password)) {
+            numericCheck.classList.add('requirement-met');
+        } else {
+            numericCheck.classList.remove('requirement-met');
+        }
+
+        // Validar complejidad
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSymbols = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if ((hasUpperCase && hasLowerCase && hasNumbers) || 
+            (hasUpperCase && hasLowerCase && hasSymbols) || 
+            (hasNumbers && hasSymbols)) {
+            complexityCheck.classList.add('requirement-met');
+        } else {
+            complexityCheck.classList.remove('requirement-met');
+        }
+
+        // La validación de contraseña común se mantiene en el backend
+        
+        if (password.length >= 8 && !hasSimilarInfo && !/^\d+$/.test(password)) {
+            commonCheck.classList.add('requirement-met');
+        } else {
+            commonCheck.classList.remove('requirement-met');
+        }
+    }
+
+    password1Input.addEventListener('input', validatePassword);
+    usernameInput.addEventListener('input', validatePassword);
+    emailInput.addEventListener('input', validatePassword);
+});
+</script>
 {% endblock %}

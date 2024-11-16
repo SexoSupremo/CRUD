@@ -18,5 +18,5 @@
   <input type="submit" value="Actualizar">
 </form>
 <a href="{% url 'blog:index' %}">Volver</a>
-<a href="{% url 'user_delete' user.id %}">Eliminar cuenta</a>
+<a href="{% url 'accounts:user_delete' user.id %}">Eliminar cuenta</a>
 {% endblock %}

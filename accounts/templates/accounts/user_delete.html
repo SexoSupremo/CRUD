@@ -17,9 +17,9 @@
     </tr>
   </tbody>
 </table>
-<form action="{% url 'user_delete' user.id %}" method="post">
+<form action="{% url 'accounts:user_delete' user.id %}" method="post">
   {% csrf_token %}
   <input type="submit" value="Eliminar cuenta">
 </form>
-<a href="{% url 'user_detail' user.id %}">Volver</a>
+<a href="{% url 'accounts:user_detail' user.id %}">Volver</a>
 {% endblock %}
