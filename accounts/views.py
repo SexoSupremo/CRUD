@@ -3,6 +3,8 @@ from django.views.generic import CreateView
 from django.contrib.auth import login, authenticate
 from .forms import CustomUserCreationForm  # Añadido
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 class UserCreateAndLoginView(CreateView):
     form_class = CustomUserCreationForm
     template_name = "accounts/signup.html"
@@ -15,3 +17,6 @@ class UserCreateAndLoginView(CreateView):
         user = authenticate(email=email, password=raw_pw)
         login(self.request, user)
         return response
+class UserDetail(DetailView):
+    model = User
+    template_name = 'accounts/user_detail.html'

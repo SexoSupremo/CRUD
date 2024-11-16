@@ -10,12 +10,13 @@
     <nav>
       <ul>
         {% if user.is_authenticated %}
-        <li><a href="{% url 'blog:index' %}">Lista de Blogs</a></li>
+        <li><a href="{% url 'blog:index' %}">Lista de blogs</a></li>
         <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+        <li><a href="{% url 'user_detail' user.pk %}">Información del usuario</a></li>
+        <!-- Añadido -->
         {% else %}
         <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
-        <li><a href="{% url 'signup' %}">Registro de usuario</a></li>
-        <!-- Añadido -->
+        <li><a href="{% url 'signup' %}">Registro</a></li>
         {% endif %}
       </ul>
     </nav>
