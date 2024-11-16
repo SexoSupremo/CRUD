@@ -9,7 +9,9 @@ class Article(models.Model):
         get_user_model(),
         on_delete=models.CASCADE,
         related_name='articles',
-        verbose_name='Autor'
+        verbose_name='Autor',
+        null=False #Ahora no
+        
     )
     created_at = models.DateTimeField(
         default=timezone.now,

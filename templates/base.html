@@ -12,8 +12,8 @@
       <ul>
         {% if user.is_authenticated %}
           <li><a href="{% url 'blog:index' %}">Lista de tareas</a></li>
-          <li><a href="{% url 'user_detail' user.pk %}">Información del miembro</a></li>
-          <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+          <li><a href="{% url 'accounts:user_detail' user.pk %}">Información del miembro</a></li>
+          <li><a href="{% url 'accounts:logout' %}">Cerrar sesión</a></li>
         {% else %}
           <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
           <li><a href="{% url 'signup' %}">Registro de membresía</a></li>
