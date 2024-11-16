@@ -1,18 +1,22 @@
 {% load static %}
-
 <html>
-
   <head>
     <meta charset="utf-8">
     <title>Blog</title>
     <link rel="stylesheet" href="{% static 'blog/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
   </head>
-
   <body>
     <nav>
       <ul>
-        <li><a href="{% url 'blog:index' %}">lista de blogs</a></li>
+        <!-- Aquí comienza -->
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'blog:index' %}">Blog List</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+        <!-- Aquí termina -->
       </ul>
     </nav>
     <main>
@@ -22,5 +26,4 @@
       </div>
     </main>
   </body>
-
 </html>
