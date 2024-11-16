@@ -9,14 +9,14 @@
   <body>
     <nav>
       <ul>
-        <!-- Aquí comienza -->
         {% if user.is_authenticated %}
-        <li><a href="{% url 'blog:index' %}">Blog List</a></li>
-        <li><a href="{% url 'logout' %}">Logout</a></li>
+        <li><a href="{% url 'blog:index' %}">Lista de Blogs</a></li>
+        <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
         {% else %}
-        <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
+        <li><a href="{% url 'signup' %}">Registro de usuario</a></li>
+        <!-- Añadido -->
         {% endif %}
-        <!-- Aquí termina -->
       </ul>
     </nav>
     <main>
