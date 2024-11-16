@@ -16,6 +16,8 @@ from django.contrib.auth.views import (
     PasswordChangeView, PasswordChangeDoneView)
 from django.urls import reverse
 User = get_user_model()
+
+
 class UserCreateAndLoginView(CreateView):
     form_class = CustomUserCreationForm
     template_name = "accounts/signup.html"
@@ -28,11 +30,16 @@ class UserCreateAndLoginView(CreateView):
         user = authenticate(email=email, password=raw_pw)
         login(self.request, user)
         return response
-class UserDetail(DetailView):
+from django.contrib.auth.mixins import UserPassesTestMixin
+class OnlyYouMixin(UserPassesTestMixin):
+    def test_func(self):
+        user = self.request.user
+        return user.pk == self.kwargs['pk'] or user.is_superuser
+class UserDetail(OnlyYouMixin, DetailView):
     model = User
     template_name = 'accounts/user_detail.html'
 
-class UserUpdate(UpdateView):
+class UserUpdate(OnlyYouMixin,UpdateView):
     model = User
     form_class = UserUpdateForm
     template_name = 'accounts/user_edit.html'
@@ -40,13 +47,16 @@ class UserUpdate(UpdateView):
     def get_success_url(self):
         return reverse('user_detail', kwargs={'pk': self.kwargs['pk']})
 
+class UserDelete(OnlyYouMixin,DeleteView):
+    model = User
+    template_name = 'accounts/user_delete.html'
+    success_url = reverse_lazy('login')
+
 class PasswordChange(PasswordChangeView):
     template_name = 'accounts/password_change.html'
 
 class PasswordChangeDone(PasswordChangeDoneView):
     template_name = 'accounts/user_detail.html'
 
-class UserDelete(DeleteView):
-    model = User
-    template_name = 'accounts/user_delete.html'
-    success_url = reverse_lazy('login')
+
+

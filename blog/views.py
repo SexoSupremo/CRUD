@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import Article
 from .forms import ArticleForm
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -11,7 +12,7 @@ def index(request):
     }
     return render(request, 'blog/index.html', params)
 
-
+@login_required
 def create(request):
     if (request.method == 'POST'):
         title = request.POST['title']
