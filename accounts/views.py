@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth import login, authenticate
 from .forms import CustomUserCreationForm  # Añadido
+from django.views.generic.detail import DetailView
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
