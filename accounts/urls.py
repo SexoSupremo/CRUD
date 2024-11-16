@@ -1,15 +1,10 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView  # Añadido
-from django.contrib.auth.forms import UserCreationForm  # Añadido
+from . import views  # Añadido
 
 urlpatterns = [
-    path('signup/', CreateView.as_view(
-        template_name='accounts/signup.html',
-        form_class=UserCreationForm,
-        success_url='/accounts/login',
-    ), name='signup'),
-    # Añadido
+    path('signup/', views.UserCreateAndLoginView.as_view(), name='signup'),  # Cambiado
     path('login/', LoginView.as_view(
         redirect_authenticated_user=True,
         template_name='accounts/login.html'
