@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 
 {% block main %}
-<h1>Login</h1>
+<h1>Pantalla de inicio de sesión</h1>
 <form method="post">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next }}" />
-  {{ form.as_p }}
-  <input type="submit" value="Login">
+  <div class="form-group">
+    <label for="id_username">Dirección de correo electrónico</label>
+    {{ form.username }}
+  </div>
+  <div class="form-group">
+    <label for="id_password">Contraseña</label>
+    {{ form.password }}
+  </div>
+  <input type="submit" value="Acceso">
 </form>
 {% endblock %}

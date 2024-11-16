@@ -1,10 +1,22 @@
 {% extends "base.html" %}
 {% block main %}
+<h1>Página de edición de información de miembros</h1>
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
+  <div class="form-group">
+    <label for="id_username">Nombre de usuario</label>
+    {{ form.username }}
+  </div>
+  <div class="form-group">
+    <label for="id_email">Dirección de correo electrónico</label>
+    {{ form.email }}
+  </div>
+  <div class="form-group">
+    <label for="id_age">Edad</label>
+    {{ form.age }}
+  </div>
   <input type="submit" value="Actualizar">
 </form>
-<a href="{% url 'user_detail' user.id %}">Volver</a>
+<a href="{% url 'blog:index' %}">Volver</a>
 <a href="{% url 'user_delete' user.id %}">Eliminar cuenta</a>
 {% endblock %}

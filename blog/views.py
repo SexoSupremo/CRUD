@@ -1,66 +1,76 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from .models import Article
 from .forms import ArticleForm
-from django.contrib.auth.decorators import login_required
 
-
+# Vista pública - no requiere autenticación
 def index(request):
-    articles = Article.objects.all()
-    params = {
+    """Lista todas las tareas/artículos"""
+    articles = Article.objects.all().order_by('-created_at')
+    return render(request, 'blog/index.html', {
         'articles': articles,
-    }
-    return render(request, 'blog/index.html', params)
+    })
 
 @login_required
 def create(request):
-    if (request.method == 'POST'):
-        title = request.POST['title']
-        content = request.POST['content']
-        article = Article(title=title, content=content)
-        article.save()
-        return redirect('blog:index')
+    """Crear nuevo artículo - requiere autenticación"""
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.author = request.user
+            article.save()
+            return redirect('blog:index')
     else:
-        params = {
-            'form': ArticleForm(),
-        }
-        return render(request, 'blog/create.html', params)
-
+        form = ArticleForm()
+    
+    return render(request, 'blog/create.html', {
+        'form': form,
+    })
 
 def detail(request, article_id):
-    article = Article.objects.get(id=article_id)
-    params = {
+    """Ver detalle de un artículo"""
+    article = get_object_or_404(Article, id=article_id)
+    return render(request, 'blog/detail.html', {
         'article': article,
-    }
-    return render(request, 'blog/detail.html', params)
+    })
 
-
+@login_required
 def edit(request, article_id):
-    article = Article.objects.get(id=article_id)
-    if (request.method == 'POST'):
-        article.title = request.POST['title']
-        article.content = request.POST['content']
-        article.save()
-        return redirect('blog:detail', article_id)
+    """Editar artículo - requiere autenticación y ser el autor"""
+    article = get_object_or_404(Article, id=article_id)
+    
+    # Verificar que el usuario actual sea el autor
+    if article.author != request.user:
+        raise PermissionDenied
+        
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            form.save()
+            return redirect('blog:detail', article_id=article.id)
     else:
-        form = ArticleForm(initial={
-            'title': article.title,
-            'content': article.content,
-        })
-        params = {
-            'article': article,
-            'form': form,
-        }
-        return render(request, 'blog/edit.html', params)
+        form = ArticleForm(instance=article)
+    
+    return render(request, 'blog/edit.html', {
+        'article': article,
+        'form': form,
+    })
 
-
+@login_required
 def delete(request, article_id):
-    article = Article.objects.get(id=article_id)
-    if (request.method == 'POST'):
+    """Eliminar artículo - requiere autenticación y ser el autor"""
+    article = get_object_or_404(Article, id=article_id)
+    
+    # Verificar que el usuario actual sea el autor
+    if article.author != request.user:
+        raise PermissionDenied
+        
+    if request.method == 'POST':
         article.delete()
         return redirect('blog:index')
-    else:
-        params = {
-            'article': article,
-        }
-        return render(request, 'blog/delete.html', params)
+        
+    return render(request, 'blog/delete.html', {
+        'article': article,
+    })
